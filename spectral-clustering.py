@@ -77,6 +77,14 @@ def cluster(affinity_matrix):
 
     return cluster_labels, label_map
 
+def calculate_metric(result, validate_df):
+    # calculate MSE and RMSE
+    A = np.around(result[:, 2])
+    B = np.array(validate_df['rating'])
+    mse = ((A - B)**2).mean(axis=None)
+    rmse = np.sqrt(mse)
+    return mse, rmse
+
 class options:
     def __init__(self):
         self.save_objs = False
@@ -133,3 +141,5 @@ result = validate.predict(validate_df, train_cid,
                     cluster_labels, label_map, block_size=10000)
 
 np.savetxt(base_path + 'pred_final.txt', np.around(result[:, 2]))
+
+mse, rmse = calculate_metric(result, validate_df)
