@@ -45,7 +45,7 @@ def make_matrix(train_df, train_cid, train_mid):
         train_ratings[customer_idx, movie_idx] = current[2]
     return train_ratings
 
-def preprocess_matrix(train_ratings):
+def process_matrix(train_ratings):
     train_processed_mov = np.zeros(train_ratings.shape)
     for i in range(train_ratings.shape[1]):
         rating_movie = train_ratings[:, i]
@@ -53,6 +53,13 @@ def preprocess_matrix(train_ratings):
     return train_processed_mov
 
 
+def create_affinity_matrix(matrix):
+    affinity_matrix = sklearn.metrics.pairwise_distances(
+                            matrix, 
+                            metric='cosine', 
+                            n_jobs=-1, 
+                            force_all_finite=True)
+    return affinity_matrix
 
 
 class options:
@@ -95,5 +102,6 @@ if opt.save_objs:
 if opt.load_objs:
     train_ratings = save_utils.load_obj(pre+'train_ratings')
 
-preprocessed_matrix = preprocess_matrix(train_ratings)
+preprocessed_matrix = process_matrix(train_ratings)
 
+train_movie_by_movie = create_affinity_matrix(preprocessed_matrix)
