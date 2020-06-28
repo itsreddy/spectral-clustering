@@ -1,0 +1,9 @@
+Environment: Jupyter Notebook on Google Colab
+Packages used:
+	A) Spectral Clustering:
+		1. Numpy
+		2. Pandas
+		3. Scikit-learn
+	B) Matrix Completion:
+		1. Numpy
+		2. Pandas
