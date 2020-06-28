@@ -14,12 +14,12 @@ The below flowcharts give a detailed walkthrough of both the training and predic
  Flowchart 1: Training + Validation process
 </p>
 
+We begin by constructing a user-by-movie matrix R that holds the ratings obtained from the training dataset and normalizing this ratings matrix to R_{Norm} with respect to movies, i.e. along the columns of the matrix by mean centering. Then we construct an affinity matrix A_{movie} by calculating the pairwise cosine distances of the columns of the ratings matrix. We then run spectral clustering algorithm on the movies with k = 10 to obtain clusters of similarly rated movies. Using these clusters, we make a prediction on the data points from the validation/test dataset. The predictions are based on a weighted mean of the ratings of p=10 nearest neighbors from the clusters corresponding to a particular movie-id and customer-id, the weights are the similarity values calculated earlier. We perform ten fold cross validation while tuning hyper parameters. Overall this approach achieves a mean squared error(MSE) of 0 .91.
+
 <p align="center">
   <img width="293" height="267" src="images/clustering-Copy of Page-1.png"> </br>
  Flowchart 2: Rating Prediction Process 
 </p>
-
-We begin by constructing a user-by-movie matrix R that holds the ratings obtained from the training dataset and normalizing this ratings matrix to R_{Norm} with respect to movies, i.e. along the columns of the matrix by mean centering. Then we construct an affinity matrix A_{movie} by calculating the pairwise cosine distances of the columns of the ratings matrix. We then run spectral clustering algorithm on the movies with k = 10 to obtain clusters of similarly rated movies. Using these clusters, we make a prediction on the data points from the validation/test dataset. The predictions are based on a weighted mean of the ratings of p=10 nearest neighbors from the clusters corresponding to a particular movie-id and customer-id, the weights are the similarity values calculated earlier. We perform ten fold cross validation while tuning hyper parameters. Overall this approach achieves a mean squared error(MSE) of 0 .91.
  
 The user clustering branch is drawn with a dotted line because even though we calculate these components, we do not make the final predictions using them, the reasons for such design choices and other hyper parameter related tuning details will be listed in the next section. 
  
