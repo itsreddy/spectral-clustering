@@ -8,7 +8,6 @@ from collections import defaultdict
 import pickle
 import scipy
 import sklearn.metrics
-from sklearn.utils import shuffle
 
 base_path = os.getcwd()
 sys.path.append(base_path)
@@ -32,9 +31,9 @@ def create_dict(id_list):
     print(len(id_dict))
     return id_dict
 
-def make_matrix(train_df, train_cid, train_mid):
+def make_matrix(train_df, train_cid, train_mid, x, y):
     # Make movie-by-user matrix to hold ratings
-    train_ratings = np.zeros((train_cust_n, train_movies_n), np.short)
+    train_ratings = np.zeros((x, y), np.short)
     for i in range(len(train_df)):
         current = train_df.iloc[i]
         customer_idx = train_cid.get(current[1])
@@ -84,62 +83,3 @@ def calculate_metric(result, validate_df):
     mse = ((A - B)**2).mean(axis=None)
     rmse = np.sqrt(mse)
     return mse, rmse
-
-class options:
-    def __init__(self):
-        self.save_objs = False
-        self.load_objs = False
-        self.split_dataset = True
-
-opt = options()
-
-if opt.save_objs or opt.load_objs:
-    os.makedirs(base_path + '/obj/', exist_ok=True)
-    pre = base_path + '/obj/'
-
-raw_df = pd.read_csv( base_path + "train.csv")
-raw_df = shuffle(raw_df)
-raw_df = raw_df.reset_index(drop=True)
-
-if opt.split_dataset:
-    train_df, validate_df = split_df(raw_df, 0.8)
-else:
-    train_df, validate_df = split_df(raw_df, 0.0)
-
-train_customers = train_df['customer-id']
-train_cid_sorted = train_customers.sort_values()
-train_movies = train_df['movie-id']
-train_mid_sorted = train_movies.sort_values()
-
-train_cid = create_dict(train_cid_sorted)
-train_mid = create_dict(train_mid_sorted)
-
-train_movies_n = len(train_mid)
-train_cust_n = len(train_cid)
-print(train_movies_n, train_cust_n)
-
-train_ratings = make_matrix(train_df, train_cid, train_mid)
-
-if opt.save_objs:
-    save_utils.save_obj(train_ratings, pre+'train_ratings')
-if opt.load_objs:
-    train_ratings = save_utils.load_obj(pre+'train_ratings')
-
-preprocessed_matrix = process_matrix(train_ratings)
-
-train_movie_by_movie = create_affinity_matrix(preprocessed_matrix)
-
-cluster_labels, label_map = cluster(train_movie_by_movie)
-
-if opt.save_objs:
-    save_utils.save_obj(cluster_labels, pre+'cluster_labels')
-if opt.load_objs:
-    train_ratings = save_utils.load_obj(pre+'cluster_labels')
-
-result = validate.predict(validate_df, train_cid,
-                    train_mid, train_ratings, train_movie_by_movie, 
-                    cluster_labels, label_map, block_size=10000)
-
-np.savetxt(base_path + 'pred_final.txt', np.around(result[:, 2]))
-
-mse, rmse = calculate_metric(result, validate_df)
