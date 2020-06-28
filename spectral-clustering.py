@@ -10,14 +10,11 @@ import scipy
 import sklearn.metrics
 from sklearn.utils import shuffle
 
-import itertools
-from multiprocessing import Pool #  Process pool
-from multiprocessing import sharedctypes
-
 base_path = os.getcwd()
 sys.path.append(base_path)
 
 import save_utils
+import validate
 
 def split_df(raw_df, split):
     split_index = round(split * raw_df.shape[0])
@@ -59,8 +56,26 @@ def create_affinity_matrix(matrix):
                             metric='cosine', 
                             n_jobs=-1, 
                             force_all_finite=True)
+
+    for i in range(affinity_matrix.shape[0]):  
+        # Remove self-connections
+        affinity_matrix[i][i] = 0
+
+    affinity_matrix = 2 - affinity_matrix
+
     return affinity_matrix
 
+def cluster(affinity_matrix):
+    spec_clus = SpectralClustering(n_clusters=10, eigen_solver='arpack', 
+                                    random_state=1, n_init=5, gamma=1.0,
+                                    affinity='precomputed', 
+                                    assign_labels='kmeans', n_jobs=-1)
+    cluster_labels = spec_clus.fit_predict(affinity_matrix)
+    label_map = defaultdict(set)
+    for i, label in enumerate(cluster_labels):
+        label_map[label].add(i)
+
+    return cluster_labels, label_map
 
 class options:
     def __init__(self):
@@ -105,3 +120,16 @@ if opt.load_objs:
 preprocessed_matrix = process_matrix(train_ratings)
 
 train_movie_by_movie = create_affinity_matrix(preprocessed_matrix)
+
+cluster_labels, label_map = cluster(train_movie_by_movie)
+
+if opt.save_objs:
+    save_utils.save_obj(cluster_labels, pre+'cluster_labels')
+if opt.load_objs:
+    train_ratings = save_utils.load_obj(pre+'cluster_labels')
+
+result = validate.predict(validate_df, train_cid,
+                    train_mid, train_ratings, train_movie_by_movie, 
+                    cluster_labels, label_map, block_size=10000)
+
+np.savetxt(base_path + 'pred_final.txt', np.around(result[:, 2]))
