@@ -95,5 +95,5 @@ if opt.save_objs:
 if opt.load_objs:
     train_ratings = save_utils.load_obj(pre+'train_ratings')
 
-
+preprocessed_matrix = preprocess_matrix(train_ratings)
 
