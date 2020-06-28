@@ -9,7 +9,7 @@ In Multivariate statistics and the clustering of data, [**spectral clustering**]
 This approach works by using Spectral Clustering on the training data to cluster movies that are similarly                 rated and users that have similar rating behaviors and make further predictions on the ratings of                unknown user-movie pairs using the information inferred from similarly rated movies and users with              similar rating behaviors, obtained from the clustering. The similarity is calculated using centered cosine              distances. Overall this approach achieves a mean squared error (MSE) of 0.95 on an average when cross                 validation is performed on the training data set. Note that for the clustering, the similarity between                entities is calculated only on the basis of the rating a user gives to a movie, this process is also known as collaborative filtering. The fundamental assumption under collaborative ﬁltering is that if the users share similar ratings in the past on the same set of items, then they would likely rate the other items similarly​ [[1]](https://ieeexplore.ieee.org/document/8400447)​. 
 The below flowcharts give a detailed walkthrough of both the training and prediction phases.  
 
-![Flowchart 1: Training + Validation process](https://github.com/itsreddy/spectral-clustering/blob/master/images/clustering-Copy%20of%20Page-1.png)  
+![Flowchart 1: Training + Validation process](images/clustering-Page-1.png)  
 
 ![Flowchart 2: Rating Prediction Process](0%20p%20=%201)
 
