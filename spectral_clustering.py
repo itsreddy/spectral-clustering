@@ -12,9 +12,6 @@ import sklearn.metrics
 base_path = os.getcwd()
 sys.path.append(base_path)
 
-import save_utils
-import validate
-
 def split_df(raw_df, split):
     split_index = round(split * raw_df.shape[0])
     train_df = raw_df[split_index: ]
