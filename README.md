@@ -10,12 +10,12 @@ This approach works by using Spectral Clustering on the training data to cluster
 The below flowcharts give a detailed walkthrough of both the training and prediction phases.  
 
 <p align="center">
-  <img width="551" height="730" src="images/clustering-Page-1.png">
+  <img width="551" height="730" src="images/clustering-Page-1.png"> </br>
  Flowchart 1: Training + Validation process
 </p>
 
 <p align="center">
-  <img width="460" height="300" src="images/clustering-Page-1.png">
+  <img width="391" height="356" src="images/clustering-Copy of Page-1.png"> </br>
  Flowchart 2: Rating Prediction Process 
 </p>
 
