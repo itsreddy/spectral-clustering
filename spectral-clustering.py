@@ -15,14 +15,17 @@ from multiprocessing import Pool #  Process pool
 from multiprocessing import sharedctypes
 
 base_path = os.getcwd()
+sys.path.append(base_path)
 
-def save_obj(obj, name ):
-    with open( base_path + '/obj/'+ name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+import save_utils
 
-def load_obj(name ):
-    with open(base_path + '/obj/' + name + '.pkl', 'rb') as f:
-        return pickle.load(f)
+
+class options:
+    def __init__(self):
+        self.save_objs = False
+        self.load_objs = False
+
+opt = options()
 
 def split_df(raw_df, split):
     split_index = round(split * raw_df.shape[0])
@@ -40,11 +43,21 @@ def create_dict(id_list):
     print(len(id_dict))
     return id_dict
 
+def make_matrix(train_df, train_cid, train_mid)
+    # Make movie-by-user matrix to hold ratings
+    train_ratings = np.zeros((train_cust_n, train_movies_n), np.short)
+    for i in range(len(train_df)):
+        current = train_df.iloc[i]
+        customer_idx = train_cid.get(current[1])
+        movie_idx = train_mid.get(current[0])
+        train_ratings[customer_idx, movie_idx] = current[2]
+    return train_ratings
 
 
+if opt.save_objs or opt.load_objs:
+    os.makedirs(base_path + '/obj/', exist_ok=True)
+    pre = base_path + '/obj/'
 
-
-os.makedirs(base_path + '/obj/', exist_ok=True)
 raw_df = pd.read_csv( base_path + "train.csv")
 raw_df = shuffle(raw_df)
 raw_df = raw_df.reset_index(drop=True)
@@ -58,4 +71,15 @@ train_mid_sorted = train_movies.sort_values()
 
 train_cid = create_dict(train_cid_sorted)
 train_mid = create_dict(train_mid_sorted)
+
+train_movies_n = len(train_mid)
+train_cust_n = len(train_cid)
+print(train_movies_n, train_cust_n)
+
+train_ratings = make_matrix(train_df, train_cid, train_mid)
+
+if opt.save_objs:
+    save_obj(train_ratings, pre+'train_ratings')
+if opt.load_objs:
+    train_ratings = load_obj(pre+'train_ratings')
 
