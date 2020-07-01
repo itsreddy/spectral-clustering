@@ -1,6 +1,6 @@
 # collaborative-filtering
- [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)]() [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)]()
-> 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/itsreddy/spectral-clustering/blob/master/collaborative_filtering.ipynb)
+
 > Netflix rating prediction using collaborative filtering based on spectral clustering.
 ### Spectral Clustering Overview:
 In Multivariate statistics and the clustering of data, [**spectral clustering**]([https://en.wikipedia.org/wiki/Spectral_clustering](https://en.wikipedia.org/wiki/Spectral_clustering)) techniques make use of the spectrum (eigenvalues) of the similarity matrix of the data to perform dimensionality reduction before clustering in fewer dimensions. The similarity matrix is provided as an input and consists of a quantitative assessment of the relative similarity of each pair of points in the dataset. 
